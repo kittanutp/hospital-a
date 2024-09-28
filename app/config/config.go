@@ -18,6 +18,7 @@ type (
 		CORS          []string
 		AdminUser     string
 		AdminPassword string
+		OAuthKey      string
 	}
 
 	Db struct {
@@ -41,6 +42,7 @@ func NewConfig() *Config {
 		CORS:          strings.Split(os.Getenv("CORS"), ","),
 		AdminUser:     os.Getenv("ADMIN_USER"),
 		AdminPassword: os.Getenv("ADMIN_USER"),
+		OAuthKey:      os.Getenv("OAUTH_KEY"),
 	}
 
 	DBPort, err := strconv.Atoi(os.Getenv("DB_PORT"))

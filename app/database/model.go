@@ -25,8 +25,8 @@ type Patient struct {
 
 type Staff struct {
 	gorm.Model
-	Username     string `gorm:"column:username;type:varchar(100);unique;not null" json:"username"`
-	Password     string `gorm:"column:password;type:varchar(255);not null" json:"password"`
-	Salt         string `gorm:"column:salt;type:varchar(255);not null" json:"salt"`
-	HospitalName string `gorm:"column:hospital_name;type:varchar(255);not null" json:"hospital_name"`
+	Username     string `gorm:"column:username;type:varchar(100);unique;not null"`
+	Password     string `gorm:"column:password;type:varchar(255);not null"`
+	Salt         string `gorm:"column:salt;type:varchar(255);not null"`
+	HospitalName string `gorm:"column:hospital_name;type:varchar(255);not null"`
 }
