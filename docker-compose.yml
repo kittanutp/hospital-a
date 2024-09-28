@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: hospital-app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    env_file:
+      - ./app.env
+    depends_on:
+      - db
+  db:
+    container_name: hospital-db
+    image: postgres:15.1-alpine
+    environment:
+      POSTGRES_DB: hospital
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+      TZ: Asia/Bangkok
+    ports:
+      - 5432:5432
+
+  adminer:
+    container_name: hospital-db-admin
+    image: adminer
+    ports:
+      - 8080:8080
+
+  nginx:
+    container_name: hospital-proxy
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - app
