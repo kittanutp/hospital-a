@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -83,7 +82,6 @@ func newTestServer(cfg *config.Config, db database.Database) *gin.Engine {
 }
 
 func TestHealthCheck(t *testing.T) {
-	fmt.Print("run")
 	cfg, db := setUp(t)
 	app := newTestServer(cfg, db)
 

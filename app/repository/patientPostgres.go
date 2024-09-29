@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/kittanutp/hospital-app/database"
 	"github.com/kittanutp/hospital-app/schema"
 )
@@ -44,6 +46,7 @@ func (r *patientPostgresRepository) GetPatients(filter schema.PatientFilterSchem
 	}
 
 	var patients []database.Patient
+	fmt.Print(stm.Statement.SQL)
 	res := stm.Find(&patients)
 
 	var err error
@@ -59,7 +62,7 @@ func (r *patientPostgresRepository) GetPatients(filter schema.PatientFilterSchem
 
 func (r *patientPostgresRepository) GetPatient(id string) PatientResponse {
 	var patient database.Patient
-	res := r.db.GetSession().First(&patient, "national_id = ?", id).Or("passport_id = ?", id)
+	res := r.db.GetSession().Where("national_id = ?", id).Or("passport_id = ?", id).First(&patient)
 	var err error
 	if res.Error != nil {
 		err = res.Error

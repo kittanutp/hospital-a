@@ -9,6 +9,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gin-gonic/gin"
+	"github.com/kittanutp/hospital-app/config"
 	"github.com/kittanutp/hospital-app/database"
 	"github.com/kittanutp/hospital-app/service"
 	"github.com/stretchr/testify/assert"
@@ -91,10 +93,36 @@ func addTestStaff(t *testing.T, db database.Database) database.Staff {
 	assert.NoError(t, err)
 
 	staff := database.Staff{
-		Username: testStaffUsername,
-		Password: pwd,
-		Salt:     "TestSalt",
+		Username:     testStaffUsername,
+		Password:     pwd,
+		Salt:         "TestSalt",
+		HospitalName: testHospitalName,
 	}
 	db.GetSession().Create(&staff)
 	return staff
+}
+
+func loginTestStaff(app *gin.Engine, t *testing.T, cfg *config.Config) string {
+
+	loginRequest := map[string]string{
+		"username": testStaffUsername,
+		"password": testStaffPassword,
+	}
+	body, _ := json.Marshal(loginRequest)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/staff/login", bytes.NewBuffer(body))
+	req.Header.Set("Authorization", "Basic "+basicAuth(cfg.Server.ServiceUsername, cfg.Server.ServicePassword))
+	app.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	var responseBody map[string]interface{}
+	err := json.NewDecoder(w.Body).Decode(&responseBody)
+	assert.NoError(t, err)
+	token, ok := responseBody["token"]
+	assert.True(t, ok)
+	strToken, ok := token.(string)
+	assert.True(t, ok)
+	return "Bearer " + strToken
+
 }

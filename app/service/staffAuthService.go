@@ -35,7 +35,6 @@ func (s *StaffAuthService) ProcessStaffToken(headerToken string) repository.Staf
 
 	if token.Valid {
 		claims := token.Claims.(jwt.MapClaims)
-		fmt.Println(claims["id"])
 		var id uint
 		if idFloat, ok := claims["id"].(float64); ok {
 			id = uint(idFloat)

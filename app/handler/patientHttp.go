@@ -35,7 +35,8 @@ func (h *patientHTTPHandler) GetPatient(c *gin.Context) {
 		c.AbortWithStatusJSON(400, gin.H{"error": res.Err.Error()})
 		return
 	}
-	c.SecureJSON(200, res.Patient)
+
+	c.SecureJSON(200, schema.ConvertJSONResponse(res.Patient))
 }
 
 func (h *patientHTTPHandler) GetPatients(c *gin.Context) {
@@ -55,13 +56,19 @@ func (h *patientHTTPHandler) GetPatients(c *gin.Context) {
 		c.AbortWithStatusJSON(401, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("Creating staff with data: %+v", filter)
+	log.Printf("Get staff with data: username=%v, hospitalName=%v", staff.Username, staff.HospitalName)
 	res := h.patientService.ProcessGetPatients(filter, staff)
 	if res.Err != nil {
 		c.AbortWithStatusJSON(400, gin.H{"error": res.Err.Error()})
 		return
 	}
-	c.SecureJSON(200, res.Patients)
+	var patients []schema.PatientJsonResponse
+	fmt.Println(len(res.Patients))
+	for _, p := range res.Patients {
+		patients = append(patients, schema.ConvertJSONResponse(p))
+	}
+
+	c.SecureJSON(200, patients)
 }
 
 func processStaffFromCtx(c *gin.Context) (database.Staff, error) {
