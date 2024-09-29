@@ -47,7 +47,8 @@ func (h *StaffHTTPHandler) CreateStaff(c *gin.Context) {
 		return
 	}
 	c.SecureJSON(200, gin.H{
-		"id":       resp.Staff.ID,
-		"username": resp.Staff.Username,
+		"id":            resp.Staff.ID,
+		"username":      resp.Staff.Username,
+		"hospital_name": resp.Staff.HospitalName,
 	})
 }
