@@ -34,7 +34,7 @@ func (s *StaffService) ProcessNewStaff(data schema.CreateStaffSchema) repository
 		}
 	}
 
-	hashPassword, err := encryptPassword(data.Password, salt)
+	hashPassword, err := EncryptPassword(data.Password, salt)
 	if err != nil {
 		return repository.StaffResponse{
 			Staff: nil,
@@ -83,7 +83,7 @@ func gensalt() (string, error) {
 	return base64.URLEncoding.EncodeToString(salt), nil
 }
 
-func encryptPassword(password string, salt string) (string, error) {
+func EncryptPassword(password string, salt string) (string, error) {
 	pwdSalt := password + salt
 	hash, err := bcrypt.GenerateFromPassword([]byte(pwdSalt), bcrypt.DefaultCost)
 	if err != nil {

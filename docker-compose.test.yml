@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  test-db:
+    container_name: hospital-test-db
+    image: postgres:15.1-alpine
+    environment:
+      POSTGRES_DB: hospital-test
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpassword
+      TZ: Asia/Bangkok
+    ports:
+      - 5433:5432
