@@ -43,3 +43,12 @@ API Postman Documentation: https://documenter.getpostman.com/view/21439640/2sAXq
     │       └── staff_test.go
     └── nginx
 
+# Test
+    <!-- Run Docker for Test Database -->
+    docker-compose -f docker-compose.test.yml up --build
+    <!-- Run Test Commant -->
+    cd ./app
+    go test ./test
+
+# Deploy
+    docker-compose up --build
