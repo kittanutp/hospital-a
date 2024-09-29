@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/kittanutp/hospital-app/app/database"
+import "github.com/kittanutp/hospital-app/database"
 
 type staffAuthPostgresRepository struct {
 	db database.Database

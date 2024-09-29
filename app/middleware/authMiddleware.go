@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kittanutp/hospital-app/app/service"
+	"github.com/kittanutp/hospital-app/service"
 )
 
 type StaffAuthMiddleware struct {

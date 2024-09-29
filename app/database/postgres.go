@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/kittanutp/hospital-app/app/config"
+	"github.com/kittanutp/hospital-app/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

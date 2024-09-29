@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/kittanutp/hospital-app/app/config"
-	"github.com/kittanutp/hospital-app/app/database"
-	"github.com/kittanutp/hospital-app/app/server"
+	"github.com/kittanutp/hospital-app/config"
+	"github.com/kittanutp/hospital-app/database"
+	"github.com/kittanutp/hospital-app/server"
 )
 
 func main() {

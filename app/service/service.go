@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/kittanutp/hospital-app/app/database"
-	"github.com/kittanutp/hospital-app/app/repository"
-	"github.com/kittanutp/hospital-app/app/schema"
+	"github.com/kittanutp/hospital-app/database"
+	"github.com/kittanutp/hospital-app/repository"
+	"github.com/kittanutp/hospital-app/schema"
 )
 
 type PatientServiceInterface interface {

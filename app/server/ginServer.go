@@ -5,12 +5,12 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/kittanutp/hospital-app/app/config"
-	"github.com/kittanutp/hospital-app/app/database"
-	"github.com/kittanutp/hospital-app/app/handler"
-	"github.com/kittanutp/hospital-app/app/middleware"
-	"github.com/kittanutp/hospital-app/app/repository"
-	"github.com/kittanutp/hospital-app/app/service"
+	"github.com/kittanutp/hospital-app/config"
+	"github.com/kittanutp/hospital-app/database"
+	"github.com/kittanutp/hospital-app/handler"
+	"github.com/kittanutp/hospital-app/middleware"
+	"github.com/kittanutp/hospital-app/repository"
+	"github.com/kittanutp/hospital-app/service"
 )
 
 type ginServer struct {

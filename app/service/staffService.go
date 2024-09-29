@@ -8,10 +8,10 @@ import (
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/kittanutp/hospital-app/app/config"
-	"github.com/kittanutp/hospital-app/app/database"
-	"github.com/kittanutp/hospital-app/app/repository"
-	"github.com/kittanutp/hospital-app/app/schema"
+	"github.com/kittanutp/hospital-app/config"
+	"github.com/kittanutp/hospital-app/database"
+	"github.com/kittanutp/hospital-app/repository"
+	"github.com/kittanutp/hospital-app/schema"
 	"golang.org/x/crypto/bcrypt"
 )
 

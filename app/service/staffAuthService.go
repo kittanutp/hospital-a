@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/kittanutp/hospital-app/app/config"
-	"github.com/kittanutp/hospital-app/app/repository"
+	"github.com/kittanutp/hospital-app/config"
+	"github.com/kittanutp/hospital-app/repository"
 )
 
 type StaffAuthService struct {

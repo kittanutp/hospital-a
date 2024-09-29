@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kittanutp/hospital-app/app/database"
-	"github.com/kittanutp/hospital-app/app/schema"
-	"github.com/kittanutp/hospital-app/app/service"
+	"github.com/kittanutp/hospital-app/database"
+	"github.com/kittanutp/hospital-app/schema"
+	"github.com/kittanutp/hospital-app/service"
 )
 
 type patientHTTPHandler struct {

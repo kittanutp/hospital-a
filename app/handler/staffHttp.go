@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kittanutp/hospital-app/app/schema"
-	"github.com/kittanutp/hospital-app/app/service"
+	"github.com/kittanutp/hospital-app/schema"
+	"github.com/kittanutp/hospital-app/service"
 )
 
 type StaffHTTPHandler struct {
