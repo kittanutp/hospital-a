@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,8 +31,8 @@ func (m *StaffAuthMiddleware) AuthStaff() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": res.Err.Error()})
 			return
 		}
-
-		c.Set("staff", res.Staff)
+		log.Printf("Authorize user id %v", res.Staff.ID)
+		c.Set("staff", *res.Staff)
 		c.Next()
 	}
 }

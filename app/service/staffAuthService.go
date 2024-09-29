@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/kittanutp/hospital-app/config"
@@ -34,7 +35,16 @@ func (s *StaffAuthService) ProcessStaffToken(headerToken string) repository.Staf
 
 	if token.Valid {
 		claims := token.Claims.(jwt.MapClaims)
-		id := claims["id"].(uint)
+		fmt.Println(claims["id"])
+		var id uint
+		if idFloat, ok := claims["id"].(float64); ok {
+			id = uint(idFloat)
+		} else {
+			return repository.StaffResponse{
+				Staff: nil,
+				Err:   fmt.Errorf("invalid id value expect float64, got=%T", idFloat),
+			}
+		}
 		return s.staffAuthRepository.GetStaffById(id)
 
 	} else {

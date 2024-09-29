@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +30,7 @@ func (h *patientHTTPHandler) GetPatient(c *gin.Context) {
 		return
 	}
 
-	res := h.patientService.ProcessGetPatient(id, *staff)
+	res := h.patientService.ProcessGetPatient(id, staff)
 	if res.Err != nil {
 		c.AbortWithStatusJSON(400, gin.H{"error": res.Err.Error()})
 		return
@@ -54,8 +55,8 @@ func (h *patientHTTPHandler) GetPatients(c *gin.Context) {
 		c.AbortWithStatusJSON(401, gin.H{"error": err.Error()})
 		return
 	}
-
-	res := h.patientService.ProcessGetPatients(filter, *staff)
+	log.Printf("Creating staff with data: %+v", filter)
+	res := h.patientService.ProcessGetPatients(filter, staff)
 	if res.Err != nil {
 		c.AbortWithStatusJSON(400, gin.H{"error": res.Err.Error()})
 		return
@@ -63,15 +64,15 @@ func (h *patientHTTPHandler) GetPatients(c *gin.Context) {
 	c.SecureJSON(200, res.Patients)
 }
 
-func processStaffFromCtx(c *gin.Context) (*database.Staff, error) {
+func processStaffFromCtx(c *gin.Context) (database.Staff, error) {
 	data, exist := c.Get("staff")
 
 	if !exist {
-		return nil, errors.New("invalid staff")
+		return database.Staff{}, errors.New("invalid staff")
 	}
 	staff, ok := data.(database.Staff)
 	if !ok {
-		return nil, errors.New("invalid staff format")
+		return database.Staff{}, fmt.Errorf("invalid staff format, expected database.Staff, got=%T", data)
 	}
-	return &staff, nil
+	return staff, nil
 }

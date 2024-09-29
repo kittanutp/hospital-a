@@ -3,7 +3,6 @@ package service
 import (
 	"crypto/rand"
 	"encoding/base64"
-	"log"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -61,7 +60,6 @@ func (s *StaffService) ProcessLogIn(data schema.LogInSchema) (schema.TokenRespon
 	}
 
 	submitPassword := data.Password + resp.Staff.Salt
-	log.Println(resp.Staff.Password)
 	err := bcrypt.CompareHashAndPassword([]byte(resp.Staff.Password), []byte(submitPassword))
 	if err != nil {
 		return schema.TokenResponseSchema{
@@ -91,12 +89,11 @@ func encryptPassword(password string, salt string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	log.Println(string(hash))
 	return string(hash), nil
 }
 
 type authCustomClaims struct {
-	id uint
+	ID uint `json:"id"`
 	jwt.StandardClaims
 }
 

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kittanutp/hospital-app/schema"
@@ -24,6 +25,7 @@ func (h *StaffHTTPHandler) LogIn(c *gin.Context) {
 		c.AbortWithStatusJSON(400, fmt.Sprintf("invalid json request as %v", err.Error()))
 		return
 	}
+	log.Printf("Login with user %v", data.Username)
 	resp, err := h.staffService.ProcessLogIn(data)
 	if err != nil {
 		c.AbortWithStatusJSON(401, gin.H{"error": err.Error()})
@@ -38,6 +40,7 @@ func (h *StaffHTTPHandler) CreateStaff(c *gin.Context) {
 		c.AbortWithStatusJSON(400, fmt.Sprintf("invalid json request as %v", err.Error()))
 		return
 	}
+	log.Printf("Creating staff with data: %+v", data)
 	resp := h.staffService.ProcessNewStaff(data)
 	if resp.Err != nil {
 		c.AbortWithStatusJSON(400, gin.H{"error": resp.Err.Error()})
