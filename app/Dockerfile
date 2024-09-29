@@ -5,6 +5,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
+# RUN go test ./...
 RUN go build -o app main.go
 
 FROM alpine:latest

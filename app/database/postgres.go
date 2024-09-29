@@ -38,6 +38,7 @@ func NewPostgresDatabase(conf *config.Config) Database {
 		// Migrate the schema
 		extensionStm := `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`
 		db.Statement.Exec(extensionStm)
+		db.AutoMigrate(&Patient{}, &Staff{})
 
 		dbInstance = &postgresDatabase{Db: db}
 	})

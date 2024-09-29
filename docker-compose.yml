@@ -1,17 +1,6 @@
 version: '3.8'
 
 services:
-  app:
-    container_name: hospital-app
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
-    env_file:
-      - ./app.env
-    depends_on:
-      - db
   db:
     container_name: hospital-db
     image: postgres:15.1-alpine
@@ -22,12 +11,29 @@ services:
       TZ: Asia/Bangkok
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d hospital"]
+      interval: 2s
+      retries: 5
 
   adminer:
     container_name: hospital-db-admin
     image: adminer
     ports:
       - 8080:8080
+
+  app:
+    container_name: hospital-app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    env_file:
+      - ./app.env
+    depends_on:
+      db:
+        condition: service_healthy
 
   nginx:
     container_name: hospital-proxy

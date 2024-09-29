@@ -2,9 +2,8 @@ package service
 
 import (
 	"crypto/rand"
-	"crypto/sha256"
 	"encoding/base64"
-	"fmt"
+	"log"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -36,7 +35,13 @@ func (s *StaffService) ProcessNewStaff(data schema.CreateStaffSchema) repository
 		}
 	}
 
-	hashPassword := encryptPassword(data.Password, salt)
+	hashPassword, err := encryptPassword(data.Password, salt)
+	if err != nil {
+		return repository.StaffResponse{
+			Staff: nil,
+			Err:   err,
+		}
+	}
 	staff := database.Staff{
 		Username:     data.Username,
 		Password:     hashPassword,
@@ -54,8 +59,10 @@ func (s *StaffService) ProcessLogIn(data schema.LogInSchema) (schema.TokenRespon
 			Token:     "error",
 		}, resp.Err
 	}
-	submitPassword := encryptPassword(data.Password, resp.Staff.Salt)
-	err := bcrypt.CompareHashAndPassword([]byte(submitPassword), []byte(resp.Staff.Password))
+
+	submitPassword := data.Password + resp.Staff.Salt
+	log.Println(resp.Staff.Password)
+	err := bcrypt.CompareHashAndPassword([]byte(resp.Staff.Password), []byte(submitPassword))
 	if err != nil {
 		return schema.TokenResponseSchema{
 			TokenType: "error",
@@ -78,10 +85,14 @@ func gensalt() (string, error) {
 	return base64.URLEncoding.EncodeToString(salt), nil
 }
 
-func encryptPassword(password, salt string) string {
-	passwordStr := password + salt
-	hash := sha256.Sum256([]byte(passwordStr))
-	return fmt.Sprintf("%x", hash)
+func encryptPassword(password string, salt string) (string, error) {
+	pwdSalt := password + salt
+	hash, err := bcrypt.GenerateFromPassword([]byte(pwdSalt), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	log.Println(string(hash))
+	return string(hash), nil
 }
 
 type authCustomClaims struct {
