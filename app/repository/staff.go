@@ -3,8 +3,12 @@ package repository
 import "github.com/kittanutp/hospital-app/app/database"
 
 type StaffRepository interface {
-	GetStaff(username string) StaffResponse
+	GetStaffByUsername(username string) StaffResponse
 	CreateStaff(staff *database.Staff) StaffResponse
+}
+
+type StaffAuthRepository interface {
+	GetStaffById(id uint) StaffResponse
 }
 
 type StaffResponse struct {

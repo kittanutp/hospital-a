@@ -14,11 +14,11 @@ type (
 	}
 
 	Server struct {
-		Port          int
-		CORS          []string
-		AdminUser     string
-		AdminPassword string
-		OAuthKey      string
+		Port            int
+		CORS            []string
+		ServiceUsername string
+		ServicePassword string
+		OAuthKey        string
 	}
 
 	Db struct {
@@ -38,11 +38,11 @@ var (
 func NewConfig() *Config {
 
 	server := &Server{
-		Port:          8081,
-		CORS:          strings.Split(os.Getenv("CORS"), ","),
-		AdminUser:     os.Getenv("ADMIN_USER"),
-		AdminPassword: os.Getenv("ADMIN_USER"),
-		OAuthKey:      os.Getenv("OAUTH_KEY"),
+		Port:            8081,
+		CORS:            strings.Split(os.Getenv("CORS"), ","),
+		ServiceUsername: os.Getenv("SERVICE_USER"),
+		ServicePassword: os.Getenv("SERVICE_PWD"),
+		OAuthKey:        os.Getenv("OAUTH_KEY"),
 	}
 
 	DBPort, err := strconv.Atoi(os.Getenv("DB_PORT"))

@@ -15,3 +15,7 @@ type StaffServiceInterface interface {
 	ProcessNewStaff(data schema.CreateStaffSchema) repository.StaffResponse
 	ProcessLogIn(data schema.LogInSchema) (schema.TokenResponseSchema, error)
 }
+
+type StaffAuthServiceInterface interface {
+	ProcessStaffToken(token string) repository.StaffResponse
+}

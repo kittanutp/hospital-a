@@ -8,6 +8,7 @@ import (
 	"github.com/kittanutp/hospital-app/app/config"
 	"github.com/kittanutp/hospital-app/app/database"
 	"github.com/kittanutp/hospital-app/app/handler"
+	"github.com/kittanutp/hospital-app/app/middleware"
 	"github.com/kittanutp/hospital-app/app/repository"
 	"github.com/kittanutp/hospital-app/app/service"
 )
@@ -23,7 +24,15 @@ func NewGinServer(config *config.Config, db database.Database) Server {
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: config.Server.CORS,
 		AllowMethods: []string{"*"},
-		AllowHeaders: []string{"Content-Type,access-control-allow-origin, access-control-allow-headers"},
+		AllowHeaders: []string{
+			"Content-Type",
+			"access-control-allow-origin",
+			"access-control-allow-headers",
+			"X-Real-IP",
+			"X-Forwarded-For",
+			"X-Forwarded-Proto",
+		},
+		AllowCredentials: true,
 	}))
 	app.SetTrustedProxies(config.Server.CORS)
 
@@ -43,18 +52,25 @@ func NewGinServer(config *config.Config, db database.Database) Server {
 func (g *ginServer) Start() {
 	g.app.Use(gin.Recovery())
 	g.app.Use(gin.Logger())
+
 	g.initializePatientHttpHandler()
 	g.initializeStaffHttpHandler()
+
 	serverUrl := fmt.Sprintf(":%d", g.config.Server.Port)
 	g.app.Run(serverUrl)
 }
 
 func (g *ginServer) initializePatientHttpHandler() {
-	repo := repository.NewPatientPostgresRepository(g.db)
-	service := service.NewPatientService(repo)
-	handler := handler.NewPatientHTTPHandler(service)
+	patientRepo := repository.NewPatientPostgresRepository(g.db)
+	patientService := service.NewPatientService(patientRepo)
+	handler := handler.NewPatientHTTPHandler(patientService)
+
+	authRepo := repository.NewStaffAuthPostgresRepository(g.db)
+	authService := service.NewStaffAuthService(authRepo, *g.config.Server)
+	middleware := middleware.NewAuthMiddleware(authService)
 
 	routes := g.app.Group("patient")
+	routes.Use(middleware.AuthStaff())
 	{
 		routes.GET("search/:id", handler.GetPatient)
 		routes.POST("search", handler.GetPatients)
@@ -62,10 +78,13 @@ func (g *ginServer) initializePatientHttpHandler() {
 }
 
 func (g *ginServer) initializeStaffHttpHandler() {
-	repo := repository.NewStaffPostgresRepository(g.db)
-	service := service.NewStaffService(repo, *g.config.Server)
+	staffRepo := repository.NewStaffPostgresRepository(g.db)
+	service := service.NewStaffService(staffRepo, *g.config.Server)
 	handler := handler.NewStaffHTTPHandler(service)
 	routes := g.app.Group("staff")
+	routes.Use(gin.BasicAuth(gin.Accounts{
+		g.config.Server.ServiceUsername: g.config.Server.ServicePassword,
+	}))
 	{
 		routes.POST("login", handler.LogIn)
 		routes.POST("create", handler.CreateStaff)

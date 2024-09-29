@@ -25,18 +25,16 @@ func (h *patientHTTPHandler) GetPatient(c *gin.Context) {
 	id := c.Param("id")
 	staff, err := processStaffFromCtx(c)
 	if err != nil {
-		c.AbortWithStatusJSON(401, gin.H{
-			"error": err,
-		})
+		c.AbortWithStatusJSON(401, gin.H{"error": err.Error()})
 		return
 	}
 
 	res := h.patientService.ProcessGetPatient(id, *staff)
 	if res.Err != nil {
-		c.AbortWithStatusJSON(400, res.Err)
+		c.AbortWithStatusJSON(400, gin.H{"error": res.Err.Error()})
 		return
 	}
-	c.SecureJSON(http.StatusOK, res.Patient)
+	c.SecureJSON(200, res.Patient)
 }
 
 func (h *patientHTTPHandler) GetPatients(c *gin.Context) {
@@ -44,7 +42,7 @@ func (h *patientHTTPHandler) GetPatients(c *gin.Context) {
 	if err := c.ShouldBindJSON(&filter); err != nil {
 		if c.Request.Body != http.NoBody {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"error": fmt.Sprintf("invalid json request: %v", err),
+				"error": fmt.Sprintf("invalid json request: %v", err.Error()),
 			})
 			return
 		}
@@ -53,18 +51,16 @@ func (h *patientHTTPHandler) GetPatients(c *gin.Context) {
 	staff, err := processStaffFromCtx(c)
 
 	if err != nil {
-		c.AbortWithStatusJSON(401, gin.H{
-			"error": err,
-		})
+		c.AbortWithStatusJSON(401, gin.H{"error": err.Error()})
 		return
 	}
 
 	res := h.patientService.ProcessGetPatients(filter, *staff)
 	if res.Err != nil {
-		c.AbortWithStatusJSON(400, res.Err)
+		c.AbortWithStatusJSON(400, gin.H{"error": res.Err.Error()})
 		return
 	}
-	c.SecureJSON(http.StatusOK, res.Patients)
+	c.SecureJSON(200, res.Patients)
 }
 
 func processStaffFromCtx(c *gin.Context) (*database.Staff, error) {

@@ -21,12 +21,12 @@ func NewStaffHTTPHandler(service service.StaffServiceInterface) StaffHandler {
 func (h *StaffHTTPHandler) LogIn(c *gin.Context) {
 	var data schema.LogInSchema
 	if err := c.BindJSON(&data); err != nil {
-		c.AbortWithStatusJSON(400, fmt.Sprintf("invalid json request as %v", err))
+		c.AbortWithStatusJSON(400, fmt.Sprintf("invalid json request as %v", err.Error()))
 		return
 	}
 	resp, err := h.staffService.ProcessLogIn(data)
 	if err != nil {
-		c.AbortWithStatus(401)
+		c.AbortWithStatusJSON(401, gin.H{"error": err.Error()})
 		return
 	}
 	c.SecureJSON(200, resp)
@@ -35,12 +35,12 @@ func (h *StaffHTTPHandler) LogIn(c *gin.Context) {
 func (h *StaffHTTPHandler) CreateStaff(c *gin.Context) {
 	var data schema.CreateStaffSchema
 	if err := c.BindJSON(&data); err != nil {
-		c.AbortWithStatusJSON(400, fmt.Sprintf("invalid json request as %v", err))
+		c.AbortWithStatusJSON(400, fmt.Sprintf("invalid json request as %v", err.Error()))
 		return
 	}
 	resp := h.staffService.ProcessNewStaff(data)
 	if resp.Err != nil {
-		c.AbortWithStatusJSON(400, resp.Err)
+		c.AbortWithStatusJSON(400, gin.H{"error": resp.Err.Error()})
 		return
 	}
 	c.SecureJSON(200, gin.H{

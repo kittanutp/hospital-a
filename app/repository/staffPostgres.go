@@ -10,7 +10,7 @@ func NewStaffPostgresRepository(db database.Database) StaffRepository {
 	return &staffPostgresRepository{db: db}
 }
 
-func (r *staffPostgresRepository) GetStaff(username string) StaffResponse {
+func (r *staffPostgresRepository) GetStaffByUsername(username string) StaffResponse {
 	var staff database.Staff
 	res := r.db.GetSession().First(&staff, "username = ?", username)
 	var err error
