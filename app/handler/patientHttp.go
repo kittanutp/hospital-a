@@ -68,7 +68,7 @@ func (h *patientHTTPHandler) GetPatients(c *gin.Context) {
 		patients = append(patients, schema.ConvertJSONResponse(p))
 	}
 
-	c.SecureJSON(200, patients)
+	c.SecureJSON(200, gin.H{"data": patients})
 }
 
 func processStaffFromCtx(c *gin.Context) (database.Staff, error) {
