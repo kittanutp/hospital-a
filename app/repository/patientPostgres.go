@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/kittanutp/hospital-app/database"
 	"github.com/kittanutp/hospital-app/schema"
 )
@@ -16,21 +14,23 @@ func NewPatientPostgresRepository(db database.Database) PatientRepository {
 }
 
 func (r *patientPostgresRepository) GetPatients(filter schema.PatientFilterSchema, hospitalName string) PatientsResponse {
-	stm := r.db.GetSession()
+	stm := r.db.GetSession().Where("patient_hospital_name = ?", hospitalName)
 
-	filters := map[string]interface{}{
-		"national_id":           filter.NationalID,
-		"passport_id":           filter.PassportID,
-		"date_of_birth":         filter.DateOfBirth,
-		"phone_number":          filter.PhoneNumber,
-		"email":                 filter.Email,
-		"patient_hospital_name": hospitalName,
+	filters := map[string]*string{
+		"national_id":  filter.NationalID,
+		"passport_id":  filter.PassportID,
+		"phone_number": filter.PhoneNumber,
+		"email":        filter.Email,
 	}
 
 	for column, value := range filters {
 		if value != nil {
-			stm = stm.Where(column+" = ?", value)
+			stm = stm.Where(column+" = ?", *value)
 		}
+	}
+
+	if filter.DateOfBirth != nil {
+		stm = stm.Where("date_of_birth = ?", filter.DateOfBirth)
 	}
 
 	if filter.FirstName != nil {
@@ -46,7 +46,6 @@ func (r *patientPostgresRepository) GetPatients(filter schema.PatientFilterSchem
 	}
 
 	var patients []database.Patient
-	fmt.Print(stm.Statement.SQL)
 	res := stm.Find(&patients)
 
 	var err error

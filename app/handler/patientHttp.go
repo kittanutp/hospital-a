@@ -63,7 +63,6 @@ func (h *patientHTTPHandler) GetPatients(c *gin.Context) {
 		return
 	}
 	var patients []schema.PatientJsonResponse
-	fmt.Println(len(res.Patients))
 	for _, p := range res.Patients {
 		patients = append(patients, schema.ConvertJSONResponse(p))
 	}
